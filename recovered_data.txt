@@ -1,1 +1,1 @@
-CONFIDENTIAL: This data is packed inside the custom SSE-U1 format.
+Sanjuu's ultra-secure persisted content!
