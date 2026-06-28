@@ -1,4 +1,4 @@
-print("--- Sanjuu Secure Encrypt (SSE-U1) - Phase 7 ---")
+print("=== Sanjuu Secure Encrypt (SSE-U1) - Final Package ===")
 
 import os
 import argon2
@@ -7,19 +7,26 @@ from Crypto.PublicKey import RSA
 from Crypto.Hash import HMAC, SHA256
 from Crypto.Util.Padding import pad, unpad
 
-# 1. Base Setup (Inputs)
-password_input = input("Enter encryption password: ")
-message = b"Top Secret Data inside Phase 7 Hybrid System"
+# 1. User Inputs aur Dummy File creation
+password_input = input("Set Master Password for SSE-U1: ")
+input_file = "payload.txt"
+output_package = "secure_data.sseu1"
 
-print("\n[RSA SETUP] Generating 2048-bit RSA Key Pair (Public & Private)...")
-# 2. RSA Public aur Private Key generate karna
-rsa_key_pair = RSA.generate(2048)
-private_key = rsa_key_pair
-public_key = rsa_key_pair.publickey()
+# Ek original file bana lete hain test karne ke liye
+with open(input_file, "w") as f:
+    f.write("CONFIDENTIAL: This data is packed inside the custom SSE-U1 format.")
 
-print("Success! RSA Keys generated.")
+print(f"\n[1] Reading original file: {input_file}")
+with open(input_file, "rb") as f:
+    raw_data = f.read()
 
-print("\n[AES SETUP] Deriving AES & HMAC keys from password...")
+# 2. RSA Key Generation (For Session Key Protection)
+print("[2] Generating RSA-2048 Cryptographic Key Pair...")
+rsa_keys = RSA.generate(2048)
+public_key = rsa_keys.publickey()
+
+# 3. Key Derivation Framework (Argon2id)
+print("[3] Churning password through Argon2id KDF...")
 salt = os.urandom(16)
 key_material = argon2.low_level.hash_secret_raw(
     secret=password_input.encode(),
@@ -27,39 +34,84 @@ key_material = argon2.low_level.hash_secret_raw(
     time_cost=2,
     memory_cost=65536,
     parallelism=4,
+    hash_len=64,  # 32 Bytes for AES, 32 Bytes for HMAC
+    type=argon2.low_level.Type.ID
+)
+aes_session_key = key_material[:32]
+hmac_key = key_material[32:]
+
+# 4. AES Encryption
+print("[4] Encrypting data block with AES-256-CBC...")
+iv = os.urandom(16)
+cipher_aes = AES.new(aes_session_key, AES.MODE_CBC, iv)
+ciphertext = cipher_aes.encrypt(pad(raw_data, AES.block_size))
+
+# 5. HMAC Integrity Signature
+print("[5] Generating HMAC-SHA256 signature seal...")
+hmac_engine = HMAC.new(hmac_key, digestmod=SHA256)
+hmac_engine.update(salt + iv + ciphertext)
+mac_tag = hmac_engine.digest()
+
+# 6. RSA Key Encapsulation (Protecting the AES Key)
+print("[6] Locking AES Session Key with RSA Public Key...")
+rsa_cipher = PKCS1_OAEP.new(public_key)
+protected_aes_key = rsa_cipher.encrypt(aes_session_key) # Length: Always 256 bytes
+
+# 7. Packaging into final .sseu1 file
+print(f"[7] Writing integrated package to: {output_package}")
+with open(output_package, "wb") as f:
+    f.write(protected_aes_key)  # 256 bytes
+    f.write(salt)               # 16 bytes
+    f.write(iv)                 # 16 bytes
+    f.write(mac_tag)            # 32 bytes
+    f.write(ciphertext)         # Variable bytes
+
+print("✓ Packaging Complete! SSE-U1 file is now armed.")
+
+print("\n" + "="*40 + "\n--- [START DECRYPTION & UNPACKING] ---\n" + "="*40)
+
+# 8. Unpacking the .sseu1 file
+print(f"[1] Opening package: {output_package} for unpacking...")
+with open(output_package, "rb") as f:
+    read_protected_key = f.read(256) # Shuru ke 256 bytes alag kiye
+    read_salt = f.read(16)           # Next 16 bytes
+    read_iv = f.read(16)             # Next 16 bytes
+    read_mac_tag = f.read(32)        # Next 32 bytes
+    read_ciphertext = f.read()       # Bacha hua poora ciphertext
+
+# 9. RSA Unlock
+print("[2] Unlocking AES key using RSA Private Key...")
+rsa_decipher = PKCS1_OAEP.new(rsa_keys) # Using Private Key
+unlocked_aes_key = rsa_decipher.decrypt(read_protected_key)
+
+# 10. Re-deriving HMAC Key to verify integrity
+print("[3] Re-generating verification keys from password...")
+decrypt_key_material = argon2.low_level.hash_secret_raw(
+    secret=password_input.encode(),
+    salt=read_salt,
+    time_cost=2,
+    memory_cost=65536,
+    parallelism=4,
     hash_len=64,
     type=argon2.low_level.Type.ID
 )
-aes_key = key_material[:32]
-hmac_key = key_material[32:]
+verify_hmac_key = decrypt_key_material[32:]
 
-print("\n--- [STEP A: ENCRYPT DATA WITH AES] ---")
-iv = os.urandom(16)
-cipher_aes = AES.new(aes_key, AES.MODE_CBC, iv)
-ciphertext = cipher_aes.encrypt(pad(message, AES.block_size))
-print(f"Data Encrypted with AES. Ciphertext (Hex): {ciphertext[:10].hex()}...")
+# 11. HMAC Integrity Verification
+print("[4] Running Integrity Verification Check...")
+verifying_hmac = HMAC.new(verify_hmac_key, digestmod=SHA256)
+verifying_hmac.update(read_salt + read_iv + read_ciphertext)
 
-print("\n--- [STEP B: PROTECT AES KEY WITH RSA] ---")
-# 3. RSA Cipher Engine banana Public Key ka use karke
-rsa_cipher_encrypt = PKCS1_OAEP.new(public_key)
-
-# 4. AES Key ko RSA se Encrypt (Protect) karna
-protected_aes_key = rsa_cipher_encrypt.encrypt(aes_key)
-print(f"AES Key is now protected by RSA! Protected Key (Hex): {protected_aes_key[:10].hex()}...")
-
-
-print("\n--- [STEP C: UNLOCK AES KEY WITH RSA PRIVATE KEY] ---")
-# 5. Decryption ke liye RSA Private Key ka cipher engine banana
-rsa_cipher_decrypt = PKCS1_OAEP.new(private_key)
-
-# 6. Protected key ko wapas normal AES key mein decrypt karna
-unlocked_aes_key = rsa_cipher_decrypt.decrypt(protected_aes_key)
-
-# 7. Verify karna ki kya purani key aur nayi key same hain
-if unlocked_aes_key == aes_key:
-    print("🔒 RSA UNLOCK SUCCESS: Exact AES Session Key recovered!")
+try:
+    verifying_hmac.verify(read_mac_tag)
+    print("🔒 SUCCESS: Integrity Verified! Package has not been modified.")
     
-    # 8. Recovered Key se data decrypt karna
-    cipher_decrypt = AES.new(unlocked_aes_key, AES.MODE_CBC, iv)
-    decrypted_data = unpad(cipher_decrypt.decrypt(ciphertext), AES.block_size)
-    print(f"Decrypted Data: {decrypted_data.decode()}")
+    # 12. Final AES Decryption
+    print("[5] Executing final AES Decryption...")
+    cipher_decrypt = AES.new(unlocked_aes_key, AES.MODE_CBC, read_iv)
+    decrypted_raw = unpad(cipher_decrypt.decrypt(read_ciphertext), AES.block_size)
+    
+    print(f"\n[FINAL DECRYPTED OUTPUT]: {decrypted_raw.decode()}")
+
+except ValueError:
+    print("🚨 CRITICAL ERROR: Integrity Check Failed! Data has been tampered with.")
