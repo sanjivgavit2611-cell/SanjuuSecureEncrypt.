@@ -6,8 +6,8 @@ source.dir = src
 source.include_exts = py, png, jpg, kv, pem
 version = 1.0.0
 
-# JADUI COMBINATION: Pinned version hataya aur pyjnius ko include kiya
-requirements = python3, kivy, pyjnius, pycryptodome, argon2-cffi, cffi
+# FOOLPROOF MATCH: Exact micro-version 3.11.15 lock kiya taaki host aur target match ho jayein
+requirements = python3==3.11.15, kivy, pycryptodome, argon2-cffi, cffi
 
 orientation = portrait
 fullscreen = 0
