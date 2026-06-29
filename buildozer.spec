@@ -6,7 +6,6 @@ source.dir = src
 source.include_exts = py, png, jpg, kv, pem
 version = 1.0.0
 
-# MAHA-ILAAJ: argon2-cffi aur cffi ko hata diya jo Rust ki wajah se crash kar rahe the
 requirements = python3, kivy==2.3.0, pycryptodome
 
 orientation = portrait
