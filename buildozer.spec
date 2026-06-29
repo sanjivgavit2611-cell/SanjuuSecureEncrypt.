@@ -6,18 +6,19 @@ source.dir = src
 source.include_exts = py, png, jpg, kv, pem
 version = 1.0.0
 
-requirements = python3, kivy, pyjnius, pycryptodome, argon2-cffi, cffi
+# Sab kuch exactly pinned hai
+requirements = python3, kivy==2.3.0, pycryptodome, argon2-cffi, cffi
 
 orientation = portrait
 fullscreen = 0
 
-# STABLE ANDROID SETTINGS
+# STABLE ANDROID SETTINGS (NDK 25b is universally most stable for C-extensions)
 android.api = 34
 android.minapi = 21
-android.ndk = 26b
+android.ndk = 25b
 android.ndk_api = 21
 android.archs = arm64-v8a
 android.entrypoint = gui_app.py
 
-# Yeh hamari workflow script se automatic link ho jayega
-p4a.dir = PLACEHOLDER
+# Internet se download rokne ke liye local stable folder ko force karna
+p4a.source_dir = ./python-for-android
