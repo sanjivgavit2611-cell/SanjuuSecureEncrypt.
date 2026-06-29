@@ -1,0 +1,31 @@
+name: Build SSE-U1 APK
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Cloud Source
+      uses: actions/checkout@v4
+
+    - name: Get Architecture cache
+      uses: actions/cache@v4
+      with:
+        path: ~/.buildozer
+        key: ${{ runner.os }}-buildozer-${{ hashFiles('buildozer.spec') }}
+
+    - name: Build Android APK with Buildozer
+      uses: ArtemGovorov/buildozer-action@v1
+      with:
+        command: buildozer android debug
+        repository_root: .
+
+    - name: Upload Finished APK Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: sse-vault-app
+        path: bin/*.apk
