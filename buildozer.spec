@@ -6,8 +6,8 @@ source.dir = src
 source.include_exts = py, png, jpg, kv, pem
 version = 1.0.0
 
-# Clean Requirements (Kivy khud pyjnius ko build kar lega)
-requirements = python3, kivy, pycryptodome, argon2-cffi, cffi
+# BULLETPROOF VERSION LOCK: Python 3.11 par lock kiya taaki 3.14 ka crash na aaye
+requirements = python3==3.11, kivy, pycryptodome, argon2-cffi, cffi
 
 orientation = portrait
 fullscreen = 0
