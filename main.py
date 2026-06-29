@@ -8,6 +8,20 @@ from Crypto.Util.Padding import pad, unpad
 PRIVATE_KEY_FILE = "private_key.pem"
 PUBLIC_KEY_FILE = "public_key.pem"
 
+def show_hacker_banner():
+    """Terminal par cool hacker style banner print karta hai."""
+    print(r"""
+ 🔐 [ARMED CONTAINER ENGINE]
+  ___ ___ ___   _   _  _   _ _  
+ / __/ __| __| | | | |/ | | | | 
+ \__ \__ \ _|  | |_| |  | |_  _|
+ |___/___/___|  \___/|_|(_)  |_|
+   >> SANJUU SECURE ENCRYPT <<
+""")
+    print("="*45)
+    print(" SYSTEM STATUS: ONLINE | DATABASE: PERSISTED")
+    print("="*45)
+
 def get_or_create_rsa_keys():
     """Storage se keys load ya generate karta hai."""
     if os.path.exists(PRIVATE_KEY_FILE) and os.path.exists(PUBLIC_KEY_FILE):
@@ -100,13 +114,12 @@ def decrypt_sse_u1(package_filename, target_filename, password, rsa_private_key)
 
 # --- INTERACTIVE USER INTERFACE MENU ---
 if __name__ == "__main__":
-    # Pehle purani ya nayi keys ready kar lena background mein
     private_key, public_key = get_or_create_rsa_keys()
     
     while True:
-        print("\n" + "="*45)
-        print("     SANJUU SECURE ENCRYPT SYSTEM (SSE-U1)   ")
-        print("="*45)
+        # Naya cool banner display karna
+        show_hacker_banner()
+        
         print("1. Encrypt a File (Pack to .sseu1)")
         print("2. Decrypt a File (Unpack from .sseu1)")
         print("3. Exit Application")
@@ -114,7 +127,7 @@ if __name__ == "__main__":
         choice = input("\nSelect an option (1-3): ")
         
         if choice == "1":
-            file_to_lock = input("Enter the filename to encrypt (e.g., secret.txt): ")
+            file_to_lock = input("Enter the filename to encrypt (e.g., payload.txt): ")
             master_pass = input("Set encryption password: ")
             encrypt_sse_u1(file_to_lock, "secure_data.sseu1", master_pass, public_key)
             
