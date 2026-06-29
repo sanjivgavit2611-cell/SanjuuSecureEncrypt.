@@ -6,8 +6,7 @@ source.dir = src
 source.include_exts = py, png, jpg, kv, pem
 version = 1.0.0
 
-# FOOLPROOF MATCH: Exact micro-version 3.11.15 lock kiya taaki runner aur compilation match ho jayein
-requirements = python3==3.11.15, kivy, pycryptodome, argon2-cffi, cffi
+requirements = python3, kivy, pyjnius, pycryptodome, argon2-cffi, cffi
 
 orientation = portrait
 fullscreen = 0
@@ -19,3 +18,6 @@ android.ndk = 26b
 android.ndk_api = 21
 android.archs = arm64-v8a
 android.entrypoint = gui_app.py
+
+# Custom path to bypass Python 3.14 crash
+p4a.dir = /home/runner/work/SanjuuSecureEncrypt./custom_p4a
