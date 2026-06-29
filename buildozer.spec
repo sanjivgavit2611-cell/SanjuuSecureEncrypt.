@@ -19,5 +19,5 @@ android.ndk_api = 21
 android.archs = arm64-v8a
 android.entrypoint = gui_app.py
 
-# Local path mapping for clean override
-p4a.dir = /home/runner/work/SanjuuSecureEncrypt./custom_p4a
+# ASLI MAGIC: Official stable tag bina 'v' ke lock kiya (No Python 3.14 Crash)
+p4a.branch = 2024.04.18
