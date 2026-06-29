@@ -5,11 +5,14 @@ package.domain = org.sanjuu
 source.dir = src
 source.include_exts = py, png, jpg, kv, pem
 version = 1.0.0
-requirements = python3, kivy==2.3.0, pycryptodome, argon2-cffi, cffi
+
+# JADUI BADLAV: version tag hata kar native recipe trigger karna
+requirements = python3, kivy, pycryptodome, argon2-cffi, cffi
+
 orientation = portrait
 fullscreen = 0
 
-# STABLE ANDROID SETTINGS (NDK r28 Crash Se Bachne Ke Liye)
+# STABLE ANDROID SETTINGS
 android.api = 34
 android.minapi = 21
 android.ndk = 26b
