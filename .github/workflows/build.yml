@@ -23,6 +23,18 @@ jobs:
         pip install --upgrade pip
         pip install buildozer==1.5.0 "cython<3.0" virtualenv
 
+    - name: Clone and Prepare Stable python-for-android
+      run: |
+        # Hum khud stable version clone kar rahe hain bina buildozer ke jhanjhat ke
+        git clone https://github.com/kivy/python-for-android.git p4a_src
+        cd p4a_src
+        git checkout v2024.04.18 || git checkout $(git tag -l "v2024.*" | tail -n 1)
+        echo "Successfully locked to stable p4a version:"
+        git log -1 --oneline
+        cd ..
+        # buildozer.spec mein dynamic absolute path inject karna
+        sed -i "s|p4a.dir = .*|p4a.dir = $GITHUB_WORKSPACE/p4a_src|g" buildozer.spec
+
     - name: Compile Android APK
       run: |
         rm -rf .buildozer/

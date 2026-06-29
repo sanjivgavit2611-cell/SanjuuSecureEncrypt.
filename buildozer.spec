@@ -19,5 +19,5 @@ android.ndk_api = 21
 android.archs = arm64-v8a
 android.entrypoint = gui_app.py
 
-# ASLI MAGIC: Official stable tag bina 'v' ke lock kiya (No Python 3.14 Crash)
-p4a.branch = 2024.04.18
+# Yeh hamari workflow script se automatic link ho jayega
+p4a.dir = PLACEHOLDER
