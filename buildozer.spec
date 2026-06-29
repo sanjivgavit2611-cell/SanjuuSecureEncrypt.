@@ -6,18 +6,14 @@ source.dir = src
 source.include_exts = py, png, jpg, kv, pem
 version = 1.0.0
 
-# Humne python minor version lock hata diya hai, P4A apna khud ka stable Python 3.11 use karega
-requirements = python3, kivy==2.3.0, pycryptodome, argon2-cffi, cffi
+# MAHA-ILAAJ: argon2-cffi aur cffi ko hata diya jo Rust ki wajah se crash kar rahe the
+requirements = python3, kivy==2.3.0, pycryptodome
 
 orientation = portrait
 fullscreen = 0
-
-# STABLE ANDROID SETTINGS
 android.api = 34
 android.minapi = 21
 android.ndk = 25b
 android.ndk_api = 21
 android.archs = arm64-v8a
 android.entrypoint = gui_app.py
-
-# YAHAN KOI P4A CUSTOM DIRECTORY YA BRANCH NAHI HAI. PURE NATIVE BUILD.
