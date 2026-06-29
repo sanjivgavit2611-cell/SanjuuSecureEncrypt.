@@ -10,27 +10,21 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    - name: Set up Exact Python
+    - name: Set up Stable Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11.6'
+        python-version: '3.11'
 
-    - name: Install System Dependencies
+    - name: Install System Dependencies & Rust (For Crypto)
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential libffi-dev git zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev wget curl
+        sudo apt-get install -y build-essential libffi-dev git zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev wget curl rustc cargo
 
-    - name: Force Exact Stable Tools
+    - name: The Ultimate Pinned Installation
       run: |
         pip install --upgrade pip
-        pip install buildozer==1.5.0 Cython==0.29.33 virtualenv setuptools
-
-    - name: Lock python-for-android to Stable Tag
-      run: |
-        git clone https://github.com/kivy/python-for-android.git
-        cd python-for-android
-        git checkout tags/v2024.01.21 -b stable-build-branch
-        echo "Locked p4a securely!"
+        # Yahan humne Buildozer, Cython aur P4A teeno ko explicitly lock kar diya hai
+        pip install buildozer==1.5.0 Cython==0.29.33 virtualenv setuptools python-for-android==2024.1.21
 
     - name: Build Android APK
       run: |
