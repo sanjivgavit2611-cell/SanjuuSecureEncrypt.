@@ -12,12 +12,6 @@ jobs:
     - name: Checkout Cloud Source
       uses: actions/checkout@v4
 
-    - name: Get Architecture cache
-      uses: actions/cache@v4
-      with:
-        path: ~/.buildozer
-        key: ${{ runner.os }}-buildozer-${{ hashFiles('buildozer.spec') }}
-
     - name: Build Android APK with Buildozer
       uses: ArtemGovorov/buildozer-action@v1
       with:
@@ -29,3 +23,4 @@ jobs:
       with:
         name: sse-vault-app
         path: bin/*.apk
+
