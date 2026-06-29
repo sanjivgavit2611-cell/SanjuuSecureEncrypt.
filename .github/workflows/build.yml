@@ -23,19 +23,25 @@ jobs:
         pip install --upgrade pip
         pip install buildozer==1.5.0 "cython<3.0" virtualenv
 
-    - name: Clone and Patch python-for-android Toolchain
+    - name: Clone and Patch python-for-android Toolchain (Regex Lock)
       run: |
         cd ..
         git clone --branch master --single-branch https://github.com/kivy/python-for-android.git custom_p4a
         cd custom_p4a
-        sed -i "s/version = '3.14.2'/version = '3.11.9'/g" pythonforandroid/recipes/python3/__init__.py || true
-        sed -i "s/version = '3.14.2'/version = '3.11.9'/g" pythonforandroid/recipes/hostpython3/__init__.py || true
+        python3 -c "
+        import re
+        for recipe in ['python3', 'hostpython3']:
+            p = f'pythonforandroid/recipes/{recipe}/__init__.py'
+            raw = open(p).read()
+            patched = re.sub(r'version\s*=\s*[\"\'][^\"\']+[\"\']', 'version = \"3.11.9\"', raw)
+            open(p, 'w').write(patched)
+        "
 
     - name: Compile Android APK
       run: |
         rm -rf .buildozer/
         yes | buildozer android debug
-    
+
     - name: Upload Finished APK
       uses: actions/upload-artifact@v4
       with:

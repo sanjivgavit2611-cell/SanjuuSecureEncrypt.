@@ -19,5 +19,5 @@ android.ndk_api = 21
 android.archs = arm64-v8a
 android.entrypoint = gui_app.py
 
-# Custom path to bypass Python 3.14 crash
+# Local path mapping for clean override
 p4a.dir = /home/runner/work/SanjuuSecureEncrypt./custom_p4a
