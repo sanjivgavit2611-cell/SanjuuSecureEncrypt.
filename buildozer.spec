@@ -6,8 +6,8 @@ source.dir = src
 source.include_exts = py, png, jpg, kv, pem
 version = 1.0.0
 
-# FOOLPROOF MATCH: Exact micro-version 3.11.15 lock kiya taaki host aur target match ho jayein
-requirements = python3==3.11.15, kivy, pycryptodome, argon2-cffi, cffi
+# Requirements ekdum clean (p4a stable recipe khud handle karegi)
+requirements = python3, kivy, pycryptodome, argon2-cffi, cffi
 
 orientation = portrait
 fullscreen = 0
@@ -19,3 +19,6 @@ android.ndk = 26b
 android.ndk_api = 21
 android.archs = arm64-v8a
 android.entrypoint = gui_app.py
+
+# JADUI LINE: Stable modern release clone karne ke liye (Supports AAB & Stable Python)
+p4a.branch = v2024.04.18
