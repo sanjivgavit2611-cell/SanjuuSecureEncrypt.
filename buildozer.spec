@@ -6,8 +6,8 @@ source.dir = src
 source.include_exts = py, png, jpg, kv, pem
 version = 1.0.0
 
-# BULLETPROOF VERSION LOCK: Python 3.11 par lock kiya taaki 3.14 ka crash na aaye
-requirements = python3==3.11, kivy, pycryptodome, argon2-cffi, cffi
+# JADUI COMBINATION: Pinned version hataya aur pyjnius ko include kiya
+requirements = python3, kivy, pyjnius, pycryptodome, argon2-cffi, cffi
 
 orientation = portrait
 fullscreen = 0
